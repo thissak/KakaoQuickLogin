@@ -1,0 +1,43 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    name: Windows x64
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - name: Restore
+        run: dotnet restore KakaoQuickLogin.slnx --locked-mode
+      - name: Build
+        run: dotnet build KakaoQuickLogin.slnx -c Release --no-restore -warnaserror
+      - name: Publish and self-test
+        shell: pwsh
+        run: |
+          dotnet publish src/KakaoQuickLogin/KakaoQuickLogin.csproj `
+            -c Release -r win-x64 --self-contained true --no-restore `
+            -p:PublishSingleFile=true -o artifacts/ci/windows
+          $process = Start-Process `
+            -FilePath artifacts/ci/windows/KakaoQuickLogin.exe `
+            -ArgumentList '--self-test' -Wait -PassThru
+          exit $process.ExitCode
+
+  macos:
+    name: macOS source build
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate and build
+        run: ./macos/scripts/build.sh

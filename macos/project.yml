@@ -1,0 +1,35 @@
+name: KakaoQuickLoginMac
+
+options:
+  createIntermediateGroups: true
+  deploymentTarget:
+    macOS: "13.0"
+
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    MACOSX_DEPLOYMENT_TARGET: "13.0"
+    ENABLE_HARDENED_RUNTIME: YES
+    CODE_SIGN_STYLE: Automatic
+    GENERATE_INFOPLIST_FILE: NO
+
+targets:
+  KakaoQuickLoginMac:
+    type: application
+    platform: macOS
+    sources:
+      - path: Sources/KakaoQuickLoginMac
+    info:
+      path: Resources/Info.plist
+    entitlements:
+      path: Resources/KakaoQuickLoginMac.entitlements
+    settings:
+      base:
+        PRODUCT_NAME: KakaoQuickLogin
+        PRODUCT_BUNDLE_IDENTIFIER: io.github.thissak.KakaoQuickLogin
+        PRODUCT_MODULE_NAME: KakaoQuickLoginMac
+        CODE_SIGN_ENTITLEMENTS: Resources/KakaoQuickLoginMac.entitlements
+        INFOPLIST_FILE: Resources/Info.plist
+        COMBINE_HIDPI_IMAGES: YES
+    scheme:
+      gatherCoverageData: false

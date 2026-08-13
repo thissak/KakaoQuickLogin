@@ -1,0 +1,17 @@
+.tools/
+.packages/
+artifacts/
+**/bin/
+**/obj/
+.vs/
+*.user
+*.suo
+*.pfx
+*.snk
+.DS_Store
+macos/.build/
+macos/build/
+macos/KakaoQuickLoginMac.xcodeproj/
+macos/*.xcarchive/
+macos/*.zip
+macos/*.zip.sha256
