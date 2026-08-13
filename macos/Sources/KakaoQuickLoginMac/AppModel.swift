@@ -110,7 +110,7 @@ final class AppModel: ObservableObject {
         status = AppStatus(
             tone: .working,
             title: "확인 중",
-            message: "카카오톡 로그인 화면을 안전하게 확인하고 있습니다."
+            message: "카카오톡을 열고 로그인 화면을 확인하고 있습니다. 최대 20초까지 걸릴 수 있습니다."
         )
 
         do {
@@ -140,11 +140,23 @@ final class AppModel: ObservableObject {
                     title: "로그인 요청 완료",
                     message: "카카오톡에 비밀번호를 입력하고 로그인 버튼을 눌렀습니다."
                 )
-            case .notOnPasswordScreen:
+            case .alreadyLoggedIn:
+                status = AppStatus(
+                    tone: .success,
+                    title: "이미 로그인됨",
+                    message: "카카오톡이 이미 로그인된 상태여서 입력하지 않았습니다."
+                )
+            case .loginWindowNotFound:
                 status = AppStatus(
                     tone: .warning,
                     title: "입력하지 않음",
-                    message: "카카오톡이 비밀번호 로그인 화면이 아니어서 입력을 중단했습니다."
+                    message: "카카오톡 로그인 창을 찾지 못했습니다. 카카오톡을 직접 열어 로그인 화면을 띄운 뒤 다시 시도해 주세요."
+                )
+            case .passwordFieldNotFound:
+                status = AppStatus(
+                    tone: .warning,
+                    title: "입력하지 않음",
+                    message: "로그인 창은 찾았지만 비밀번호 입력란을 확인하지 못했습니다. 카카오톡 화면이 변경되었을 수 있습니다."
                 )
             }
         } catch {

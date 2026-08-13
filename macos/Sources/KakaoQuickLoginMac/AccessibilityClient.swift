@@ -27,19 +27,30 @@ struct AccessibilityClient {
                 return false
             }
 
+            // 부분 일치는 쓰지 않는다. 카카오톡 로그인 창에는 제목이
+            // "  QR코드 로그인"인 활성 버튼이 함께 있어, "로그인"을 포함하는지로
+            // 판별하면 비밀번호가 비어 진짜 로그인 버튼이 비활성일 때 QR 버튼이 잡힌다.
             let labels = [
                 stringAttribute(element, kAXTitleAttribute),
                 stringAttribute(element, kAXDescriptionAttribute),
                 stringAttribute(element, kAXHelpAttribute),
                 stringAttribute(element, kAXIdentifierAttribute)
             ]
-            .compactMap { $0?.lowercased() }
+            .compactMap {
+                $0?.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+            }
 
             return labels.contains { label in
-                label == "로그인" || label == "login" || label == "log in" ||
-                    label.contains("로그인")
+                label == "로그인" || label == "login" || label == "log in"
             }
         }
+    }
+
+    /// 보안 입력란을 찾지 못했을 때 현재 화면 상태를 판정하기 위해 창 제목을 읽는다.
+    func windowTitles(in application: AXUIElement) -> [String] {
+        children(of: application)
+            .filter { stringAttribute($0, kAXRoleAttribute) == kAXWindowRole }
+            .compactMap { stringAttribute($0, kAXTitleAttribute) }
     }
 
     func focusAndVerify(

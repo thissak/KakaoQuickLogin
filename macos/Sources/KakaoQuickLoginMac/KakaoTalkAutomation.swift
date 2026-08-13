@@ -26,25 +26,14 @@ final class KakaoTalkAutomation {
             throw KakaoTalkError.processVerificationFailed
         }
 
-        guard runningApplication.activate(options: [.activateAllWindows]) else {
-            throw KakaoTalkError.activationFailed
-        }
-        try await Task.sleep(nanoseconds: 350_000_000)
-
-        guard NSWorkspace.shared.frontmostApplication?.processIdentifier ==
-                runningApplication.processIdentifier else {
-            throw KakaoTalkError.activationFailed
-        }
-
         let applicationElement = AXUIElementCreateApplication(runningApplication.processIdentifier)
         AXUIElementSetMessagingTimeout(applicationElement, 4)
 
         guard let passwordField = await waitForPasswordField(in: applicationElement) else {
-            return .notOnPasswordScreen
+            return outcomeWithoutPasswordField(in: applicationElement)
         }
-        guard let loginButton = accessibility.loginButton(in: applicationElement) else {
-            throw KakaoTalkError.loginButtonNotFound
-        }
+
+        try await activateAndVerifyFrontmost(runningApplication)
 
         try accessibility.focusAndVerify(passwordField, in: applicationElement)
 
@@ -66,6 +55,11 @@ final class KakaoTalkAutomation {
             throw KakaoTalkError.activationFailed
         }
 
+        // 로그인 버튼은 비밀번호가 채워진 뒤에야 활성화되므로 입력 후에 찾는다.
+        guard let loginButton = await waitForLoginButton(in: applicationElement) else {
+            throw KakaoTalkError.loginButtonNotFound
+        }
+
         try accessibility.press(loginButton)
         return .submitted
     }
@@ -77,29 +71,68 @@ final class KakaoTalkAutomation {
         NSWorkspace.shared.open(url)
     }
 
+    /// 카카오톡이 방금 실행되었거나 창을 다시 여는 중일 수 있어 넉넉히 기다린다.
+    /// Windows판(`KakaoTalkAutomation.cs`)이 프로세스와 창 등장에 각각 20초를 쓰는 것과 맞춘다.
     private func waitForPasswordField(in application: AXUIElement) async -> AXUIElement? {
-        for attempt in 0..<4 {
+        for attempt in 0..<50 {
             if let field = accessibility.securePasswordField(in: application) {
                 return field
             }
-            if attempt < 3 {
+            if attempt < 49 {
                 try? await Task.sleep(nanoseconds: 400_000_000)
             }
         }
         return nil
     }
 
-    private func openOrFindApplication(at url: URL) async throws -> NSRunningApplication {
-        if let bundleIdentifier = Bundle(url: url)?.bundleIdentifier,
-           let runningApplication = NSRunningApplication
-               .runningApplications(withBundleIdentifier: bundleIdentifier)
-               .first(where: { candidate in
-                   guard let candidateURL = candidate.bundleURL else { return false }
-                   return normalized(candidateURL) == normalized(url)
-               }) {
-            return runningApplication
+    /// 로그인 화면이 아닐 때 원인을 구분한다. Windows판의 AlreadyLoggedIn·
+    /// LoginWindowNotFound·PasswordFieldNotFound 구분에 대응한다.
+    private func outcomeWithoutPasswordField(in application: AXUIElement) -> LoginOutcome {
+        let titles = accessibility.windowTitles(in: application)
+        if titles.isEmpty {
+            return .loginWindowNotFound
         }
+        let hasLoginWindow = titles.contains { title in
+            let normalized = title.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+            return normalized == "로그인" || normalized == "login"
+        }
+        return hasLoginWindow ? .passwordFieldNotFound : .alreadyLoggedIn
+    }
 
+    private func activateAndVerifyFrontmost(_ application: NSRunningApplication) async throws {
+        for attempt in 0..<3 {
+            if NSWorkspace.shared.frontmostApplication?.processIdentifier ==
+                application.processIdentifier {
+                return
+            }
+            _ = application.activate(options: [.activateAllWindows])
+            if attempt < 2 {
+                try await Task.sleep(nanoseconds: 350_000_000)
+            }
+        }
+        guard NSWorkspace.shared.frontmostApplication?.processIdentifier ==
+                application.processIdentifier else {
+            throw KakaoTalkError.activationFailed
+        }
+    }
+
+    private func waitForLoginButton(in application: AXUIElement) async -> AXUIElement? {
+        for attempt in 0..<4 {
+            if let button = accessibility.loginButton(in: application) {
+                return button
+            }
+            if attempt < 3 {
+                try? await Task.sleep(nanoseconds: 200_000_000)
+            }
+        }
+        return nil
+    }
+
+    /// 사람이 Dock의 카카오톡 아이콘을 클릭하는 것과 같은 동작을 한다.
+    /// 실행 중이 아니면 실행하고, 이미 실행 중이면 reopen 이벤트를 보내 창을 다시 띄운다.
+    /// `NSRunningApplication.activate()`는 앱을 앞으로 가져올 뿐 창을 띄우지 않으므로
+    /// 창이 내려가 있으면 로그인 화면을 찾지 못한다.
+    private func openOrFindApplication(at url: URL) async throws -> NSRunningApplication {
         let configuration = NSWorkspace.OpenConfiguration()
         configuration.activates = true
         return try await NSWorkspace.shared.openApplication(
@@ -160,7 +193,9 @@ final class KakaoTalkAutomation {
 
 enum LoginOutcome {
     case submitted
-    case notOnPasswordScreen
+    case alreadyLoggedIn
+    case loginWindowNotFound
+    case passwordFieldNotFound
 }
 
 enum KakaoTalkError: LocalizedError {
