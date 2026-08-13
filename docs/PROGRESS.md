@@ -22,9 +22,15 @@ Windows와 macOS에서 카카오톡 비밀번호를 운영체제 보안 저장�
 
 - Windows Release 빌드, 단일 EXE 게시, DPAPI 자체 테스트: 통과
 - macOS 프로젝트 YAML·Swift 구문 정적 검사와 GitHub Actions Xcode 컴파일: 통과
-- macOS 키체인·손쉬운 사용 권한과 최신 카카오톡 연동: 실제 Mac에서 확인 필요
+- macOS 키체인·손쉬운 사용 권한과 최신 카카오톡 연동: **실제 Mac에서 통과**(2026-08-14).
+  카카오톡이 비전면인 상태에서 앱 실행 → 비밀번호 자동 입력 → 로그인 버튼 클릭 → 메인 창
+  전환까지 약 1초에 완료. 검증 방법과 로그는
+  [handoff](handoff/2026-08-13-macos-signing-notarization.md) 참고.
+- macOS Developer ID 서명과 Apple 공증: 통과 (`spctl` → `Notarized Developer ID`)
 
 ## 다음 작업
 
-1. Xcode에서 Development Team을 선택하고 키체인·손쉬운 사용·최신 카카오톡 연동을 시험합니다.
-2. 공개 배포 시 Developer ID 서명과 Apple 공증을 적용합니다.
+1. 비밀번호 변경·삭제와 특수문자·한글 비밀번호를 실제 Mac에서 시험합니다.
+2. 카카오톡이 이미 로그인된 상태에서 `이미 로그인됨` 판정이 맞는지 확인합니다
+   (현재 판정 규칙은 "제목이 `로그인`인 창이 없으면 로그인된 것으로 간주"이며 미검증).
+3. 공개 배포 시 `docs/DISTRIBUTION.md` 점검표를 수행합니다.
