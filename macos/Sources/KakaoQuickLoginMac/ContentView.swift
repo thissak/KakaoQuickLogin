@@ -106,21 +106,21 @@ private struct StatusCard: View {
         if isBusy { return "hourglass" }
 
         switch status.tone {
-        case .ready: "lock.shield"
-        case .working: "hourglass"
-        case .success: "checkmark.circle.fill"
-        case .warning: "exclamationmark.triangle.fill"
-        case .error: "xmark.octagon.fill"
+        case .ready: return "lock.shield"
+        case .working: return "hourglass"
+        case .success: return "checkmark.circle.fill"
+        case .warning: return "exclamationmark.triangle.fill"
+        case .error: return "xmark.octagon.fill"
         }
     }
 
     private var tint: Color {
         switch status.tone {
-        case .ready: .accentColor
-        case .working: .accentColor
-        case .success: .green
-        case .warning: .orange
-        case .error: .red
+        case .ready: return .accentColor
+        case .working: return .accentColor
+        case .success: return .green
+        case .warning: return .orange
+        case .error: return .red
         }
     }
 }

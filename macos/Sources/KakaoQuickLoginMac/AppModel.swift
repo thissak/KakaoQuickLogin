@@ -171,8 +171,8 @@ enum PasswordPromptMode: String, Identifiable {
 
     var title: String {
         switch self {
-        case .initial: "비밀번호 저장"
-        case .reset: "비밀번호 변경"
+        case .initial: return "비밀번호 저장"
+        case .reset: return "비밀번호 변경"
         }
     }
 }

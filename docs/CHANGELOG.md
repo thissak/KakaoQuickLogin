@@ -2,6 +2,8 @@
 
 ### 2026-08-13
 
+- [fix] macOS 상태 UI의 계산 속성에 명시적 반환을 추가했습니다. Swift 5 모드의 Xcode
+  컴파일 오류를 해결하기 위함입니다.
 - [feat] Windows x64 휴대형 단일 EXE와 DPAPI 기반 비밀번호 저장을 추가했습니다. 설치 없이
   실행하고 현재 Windows 사용자 범위에서 비밀번호를 보호하기 위함입니다.
 - [feat] SwiftUI, macOS 키체인, Accessibility API를 사용한 macOS 앱을 추가했습니다. 두
