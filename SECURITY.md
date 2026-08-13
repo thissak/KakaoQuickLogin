@@ -5,8 +5,11 @@
 - Windows: Data Protection API(DPAPI)의 `CurrentUser` 범위로 암호화하며
   `%LOCALAPPDATA%\KakaoQuickLogin\password.dat`에 저장합니다. 파일만 다른 PC나 다른
   Windows 사용자에게 복사해도 복호화할 수 없습니다.
-- macOS: 데이터 보호 키체인의 일반 암호 항목으로 저장하며, 접근성은
-  `WhenUnlockedThisDeviceOnly`로 제한합니다. 다른 Mac으로 동기화되지 않습니다.
+- macOS: 로그인 키체인(파일 기반)의 일반 암호 항목으로 저장합니다. 항목은 앱의 코드 서명에
+  묶인 접근 제어 목록으로 보호되며, 다른 앱이 읽으려 하면 macOS가 사용자 승인을 요구합니다.
+  iCloud 키체인으로 동기화하지 않으므로 다른 Mac으로 넘어가지 않습니다. 데이터 보호
+  키체인을 쓰지 않는 이유는 [ADR 002](docs/adr/002-macos-file-based-keychain.md)를
+  참고하세요.
 
 DPAPI와 키체인은 같은 사용자 권한으로 실행되며 필요한 권한을 가진 악성 프로그램까지 막는
 완전한 격리 장치는 아닙니다. 운영체제를 최신 상태로 유지하고 신뢰할 수 없는 프로그램과

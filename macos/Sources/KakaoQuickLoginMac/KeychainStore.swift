@@ -66,7 +66,6 @@ actor KeychainStore {
 
         var addQuery = baseQuery()
         addQuery[kSecValueData as String] = passwordData
-        addQuery[kSecAttrAccessible as String] = kSecAttrAccessibleWhenUnlockedThisDeviceOnly
 
         let addStatus = SecItemAdd(addQuery as CFDictionary, nil)
         guard addStatus == errSecSuccess else {
@@ -81,12 +80,14 @@ actor KeychainStore {
         }
     }
 
+    // 파일 기반 로그인 키체인을 사용한다. 데이터 보호 키체인은 접근 그룹 entitlement와
+    // 그것을 승인하는 프로비저닝 프로파일을 앱에 임베드해야 하며(TN3137), 그 구성 없이
+    // 접근하면 SecItemAdd가 -34018(errSecMissingEntitlement)로 실패한다.
     private func baseQuery() -> [String: Any] {
         [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: service,
-            kSecAttrAccount as String: account,
-            kSecUseDataProtectionKeychain as String: true
+            kSecAttrAccount as String: account
         ]
     }
 }
