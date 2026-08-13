@@ -2,6 +2,9 @@
 
 ### 2026-08-13
 
+- [chore] GOLEM 카탈로그에 등록되었습니다 (id `kakao-quick-login`, org `personal`). 프로젝트
+  위치를 상위 Control Plane에서 집계하기 위함이며, 상태 SSOT는 이 저장소의 문서에 그대로
+  남습니다.
 - [docs] GitHub Actions의 macOS Xcode 빌드 통과 결과를 진행·인계 문서에 반영했습니다.
   Mac에서 남은 실제 카카오톡 연동 검증 범위를 정확히 전달하기 위함입니다.
 - [fix] macOS 상태 UI의 계산 속성에 명시적 반환을 추가했습니다. Swift 5 모드의 Xcode
