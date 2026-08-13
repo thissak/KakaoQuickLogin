@@ -31,6 +31,6 @@ Xcode에서 `KakaoQuickLoginMac` 타깃의 Development Team을 선택해 실행�
 
 ## 알려진 미검증 사항
 
-현재 작업 환경은 Windows이므로 AppKit/SwiftUI 실제 컴파일, 손쉬운 사용 권한 흐름, 최신
-macOS용 카카오톡 접근성 트리는 아직 실기 검증하지 못했습니다. GitHub Actions의 macOS 빌드와
+GitHub Actions의 macOS 환경에서 AppKit/SwiftUI Xcode 컴파일은 통과했습니다. 손쉬운 사용
+권한 흐름과 최신 macOS용 카카오톡 접근성 트리는 아직 실제 Mac에서 검증하지 못했습니다.
 실제 Mac 시험 결과에 따라 접근성 레이블 탐지를 조정할 수 있습니다.

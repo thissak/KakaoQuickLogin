@@ -21,11 +21,10 @@ Windows와 macOS에서 카카오톡 비밀번호를 운영체제 보안 저장�
 ## 현재 검증 상태
 
 - Windows Release 빌드, 단일 EXE 게시, DPAPI 자체 테스트: 통과
-- macOS 프로젝트 YAML·Swift 구문 정적 검사: 통과
-- macOS 실제 Xcode 컴파일과 최신 카카오톡 연동: Mac에서 확인 필요
+- macOS 프로젝트 YAML·Swift 구문 정적 검사와 GitHub Actions Xcode 컴파일: 통과
+- macOS 키체인·손쉬운 사용 권한과 최신 카카오톡 연동: 실제 Mac에서 확인 필요
 
 ## 다음 작업
 
-1. Mac에서 `./macos/scripts/build.sh`를 실행해 실제 Xcode 컴파일을 확인합니다.
-2. Xcode에서 Development Team을 선택하고 키체인·손쉬운 사용·최신 카카오톡 연동을 시험합니다.
-3. 공개 배포 시 Developer ID 서명과 Apple 공증을 적용합니다.
+1. Xcode에서 Development Team을 선택하고 키체인·손쉬운 사용·최신 카카오톡 연동을 시험합니다.
+2. 공개 배포 시 Developer ID 서명과 Apple 공증을 적용합니다.
