@@ -106,15 +106,36 @@ shasum -a 256 artifacts/macos/KakaoQuickLogin-<version>-macos-universal.zip
 탭 저장소에서 검증합니다.
 
 ```bash
-brew style --cask Casks/kakao-quick-login.rb
-brew audit --cask --online kakao-quick-login
+brew style --cask thissak/tap/kakao-quick-login
+brew audit --cask --online thissak/tap/kakao-quick-login
 brew install --cask kakao-quick-login
 ```
 
 `brew style`은 탭 안에 있는 캐스크만 검사합니다. 저장소 밖 파일을 지정하면
 `Homebrew requires casks to be in a tap`으로 거절됩니다.
 
-### 4. 검색 노출
+### 4. tap trust
+
+Homebrew는 공식 저장소 밖의 탭을 불러오기 전에 **trust 확인**을 요구합니다. 사용자가
+`brew trust`를 실행하지 않으면 설치가 다음과 같이 중단됩니다.
+
+```
+Error: Refusing to load cask thissak/tap/kakao-quick-login from untrusted tap thissak/tap.
+```
+
+따라서 안내하는 설치 명령은 반드시 세 줄이어야 합니다.
+
+```bash
+brew tap thissak/tap
+brew trust --cask thissak/tap/kakao-quick-login
+brew install --cask kakao-quick-login
+```
+
+Homebrew는 탭 전체(`brew trust thissak/tap`)보다 캐스크 단위 신뢰를 권장합니다. 신뢰
+기록은 `~/.homebrew/trust.json`에 남으므로, 재현 시험을 할 때는 이 파일을 비워야 실제
+첫 설치 경로가 나옵니다.
+
+### 5. 검색 노출
 
 릴리스와 저장소 메타데이터가 검색·자동화 도구의 유일한 입력입니다.
 

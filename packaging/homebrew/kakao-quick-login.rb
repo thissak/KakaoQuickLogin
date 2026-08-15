@@ -6,10 +6,10 @@ cask "kakao-quick-login" do
       verified: "github.com/thissak/KakaoQuickLogin/"
   name "KakaoQuickLogin"
   name "카카오톡 빠른 로그인"
-  desc "Fills the saved password on the KakaoTalk for Mac login screen"
+  desc "Fills the saved password on the KakaoTalk login screen"
   homepage "https://goldenlabs.dev/"
 
-  depends_on macos: ">= :ventura"
+  depends_on macos: :ventura
 
   app "KakaoQuickLogin.app"
 

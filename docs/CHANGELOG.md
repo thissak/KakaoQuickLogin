@@ -17,6 +17,10 @@
   개인 탭(`thissak/homebrew-tap`)으로 먼저 배포합니다. 개인 탭에는 요건이 없습니다.
 - [docs] `docs/DISTRIBUTION.md`에 Homebrew 배포 절차, 저장소 메타데이터 노출 항목, 번들 ID
   변경 이력을 추가하고 README에 설치·연락처 안내를 넣었습니다.
+- [docs] 설치 안내에 `brew trust` 단계를 넣었습니다. Homebrew는 공식 저장소 밖의 탭을
+  불러오기 전에 trust 확인을 요구하며, 이 단계를 빼면 `Refusing to load cask ... from
+  untrusted tap`으로 설치가 중단됩니다. `~/.homebrew/trust.json`을 비우고 실제 첫 설치
+  경로를 재현해 확인했습니다.
 - [build] 새 번들 ID와 아이콘으로 유니버설 빌드를 다시 서명·공증했습니다
   (`KakaoQuickLogin-0.1.0-macos-universal.zip`, SHA-256 `01a9cc09…`,
   `spctl` → `Notarized Developer ID`).

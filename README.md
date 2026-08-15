@@ -42,8 +42,12 @@ Homebrew로 설치합니다.
 
 ```bash
 brew tap thissak/tap
+brew trust --cask thissak/tap/kakao-quick-login
 brew install --cask kakao-quick-login
 ```
+
+`brew trust`는 Homebrew가 공식 저장소 밖의 탭을 불러오기 전에 요구하는 확인 절차입니다.
+생략하면 `Refusing to load cask ... from untrusted tap`으로 설치가 중단됩니다.
 
 또는 [릴리스 페이지](https://github.com/thissak/KakaoQuickLogin/releases)에서 ZIP을 받아
 `KakaoQuickLogin.app`을 `/응용 프로그램`으로 옮깁니다. Developer ID로 서명하고 Apple
