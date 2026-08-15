@@ -36,9 +36,28 @@ Windows와 macOS는 운영체제 보안 저장소와 자동화 API가 달라 별
 
 저장된 비밀번호를 삭제하려면 `KakaoQuickLogin.exe --forget`을 실행합니다.
 
+## macOS 설치
+
+Homebrew로 설치합니다.
+
+```bash
+brew tap thissak/tap
+brew install --cask kakao-quick-login
+```
+
+또는 [릴리스 페이지](https://github.com/thissak/KakaoQuickLogin/releases)에서 ZIP을 받아
+`KakaoQuickLogin.app`을 `/응용 프로그램`으로 옮깁니다. Developer ID로 서명하고 Apple
+공증을 받은 빌드라 Gatekeeper 경고 없이 실행됩니다.
+
 ## macOS 사용법
 
-macOS에서 소스를 받은 뒤 다음 안내에 따라 Xcode 프로젝트를 생성하고 서명해 실행합니다.
+1. 앱을 실행하고 최초 한 번 카카오톡 비밀번호를 입력해 저장합니다.
+2. macOS가 요청하는 손쉬운 사용 권한을 허용합니다.
+3. 이후에는 앱을 실행하기만 하면 저장된 비밀번호로 로그인합니다.
+
+비밀번호 변경과 삭제는 앱의 설정 화면에서 할 수 있습니다.
+
+### 소스에서 빌드
 
 ```bash
 cd macos
@@ -47,9 +66,7 @@ brew install xcodegen
 open KakaoQuickLoginMac.xcodeproj
 ```
 
-Xcode의 **Signing & Capabilities**에서 Development Team을 선택해야 합니다. 최초 실행 시
-macOS가 요청하는 손쉬운 사용 권한을 허용합니다. 이후 앱을 실행하면 저장된 비밀번호로
-로그인을 시도합니다. 비밀번호 변경과 삭제는 앱의 설정 화면에서 할 수 있습니다.
+Xcode의 **Signing & Capabilities**에서 Development Team을 선택해야 합니다.
 
 상세 빌드와 Developer ID 배포 절차는 [macos/README.md](macos/README.md)를 참고하세요.
 
@@ -68,3 +85,10 @@ macOS가 요청하는 손쉬운 사용 권한을 허용합니다. 이후 앱을 
 산출물은 `artifacts\KakaoQuickLogin-<version>-win-x64.zip`에 생성됩니다.
 
 전체 공개 배포 절차와 점검표는 [docs/DISTRIBUTION.md](docs/DISTRIBUTION.md)를 참고하세요.
+
+## 만든 곳
+
+골든랩 (GoldenLabs) — [goldenlabs.dev](https://goldenlabs.dev)
+
+버그 제보와 문의는 [이슈](https://github.com/thissak/KakaoQuickLogin/issues) 또는
+daeuk@goldenlabs.dev 로 보내주세요.

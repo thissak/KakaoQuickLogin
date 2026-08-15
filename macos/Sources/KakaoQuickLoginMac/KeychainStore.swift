@@ -2,7 +2,7 @@ import Foundation
 import Security
 
 actor KeychainStore {
-    private let service = "io.github.thissak.KakaoQuickLogin"
+    private let service = "dev.goldenlabs.KakaoQuickLogin"
     private let account = "kakaotalk-password-v1"
 
     func hasPassword() throws -> Bool {

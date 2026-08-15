@@ -1,5 +1,26 @@
 # 변경 기록
 
+### 2026-08-15
+
+- [feat] macOS 앱 아이콘을 추가했습니다 (그래파이트 배경·흰 말풍선·골드 번개). 그동안
+  애셋 카탈로그가 없어 Dock에 기본 플레이스홀더가 떴습니다. 카카오 브랜드 색과 로고를
+  쓰지 않은 것은 상표 분쟁 소지를 남기면 Homebrew 배포와 공개 배포가 함께 막히기
+  때문입니다. 16~1024px을 각 크기에서 네이티브 렌더링해 작은 크기의 뭉개짐을 줄였습니다.
+- [feat] 앱 설정 화면에 정보 섹션(버전·만든 곳·연락처·비제휴 고지)을 넣었습니다.
+- [breaking] 번들 ID를 `io.github.thissak.KakaoQuickLogin`에서
+  `dev.goldenlabs.KakaoQuickLogin`으로 바꾸고 키체인 service 이름도 맞췄습니다. 공개 배포
+  전이 마지막 변경 시점이라 지금 바꿨습니다. 배포 후에 바꾸면 사용자의 손쉬운 사용 권한
+  승인과 키체인 항목이 모두 초기화됩니다. 옛 빌드를 쓰던 Mac은 비밀번호를 한 번 다시
+  입력해야 합니다.
+- [feat] Homebrew Cask 정의를 `packaging/homebrew/kakao-quick-login.rb`에 추가했습니다.
+  공식 `homebrew/cask`는 notability를 정성 심사해 갓 공개된 소프트웨어를 받지 않으므로,
+  개인 탭(`thissak/homebrew-tap`)으로 먼저 배포합니다. 개인 탭에는 요건이 없습니다.
+- [docs] `docs/DISTRIBUTION.md`에 Homebrew 배포 절차, 저장소 메타데이터 노출 항목, 번들 ID
+  변경 이력을 추가하고 README에 설치·연락처 안내를 넣었습니다.
+- [build] 새 번들 ID와 아이콘으로 유니버설 빌드를 다시 서명·공증했습니다
+  (`KakaoQuickLogin-0.1.0-macos-universal.zip`, SHA-256 `01a9cc09…`,
+  `spctl` → `Notarized Developer ID`).
+
 ### 2026-08-14
 
 - [fix] macOS 비밀번호 저장을 파일 기반 로그인 키체인으로 바꿨습니다. 데이터 보호 키체인은

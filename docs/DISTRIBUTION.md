@@ -71,6 +71,70 @@ Gatekeeper 검증을 수행한 뒤 `artifacts/macos`에 ZIP과 SHA-256 파일을
 - 최신 카카오톡에서 보안 입력란과 로그인 버튼 탐지
 - `codesign`, `notarytool`, `stapler`, `spctl` 검증 결과
 
+## Homebrew 배포
+
+### 1. 왜 개인 탭인가
+
+공식 `homebrew/cask`는 **notability**(얼마나 널리 쓰이는지)를 심사합니다. 공개된 고정
+수치 기준은 없고 정성 평가이며, 갓 공개된 소프트웨어는 "독립적으로 확인 가능한 공개
+관심과 복수의 등록 요청"이 있어야 검토 대상이 된다고만 밝히고 있습니다
+([Acceptable Casks](https://docs.brew.sh/Acceptable-Casks)).
+
+신규 저장소가 곧바로 통과하기는 어려우므로 개인 탭으로 먼저 배포하고, 사용 실적이
+쌓인 뒤 공식 탭에 제출합니다. 개인 탭에는 어떤 요건도 없습니다.
+
+### 2. 탭 저장소 만들기
+
+`thissak/homebrew-tap` 저장소를 만들면 사용자는 `thissak/tap`으로 탭할 수 있습니다.
+
+```bash
+gh repo create thissak/homebrew-tap --public \
+  --description "Homebrew tap for GoldenLabs macOS apps"
+```
+
+`Casks/kakao-quick-login.rb` 경로에 [packaging/homebrew/kakao-quick-login.rb](../packaging/homebrew/kakao-quick-login.rb)를
+복사합니다.
+
+### 3. 릴리스마다 갱신
+
+공증 스크립트가 만든 ZIP의 SHA-256으로 `version`과 `sha256`을 갱신합니다.
+
+```bash
+shasum -a 256 artifacts/macos/KakaoQuickLogin-<version>-macos-universal.zip
+```
+
+탭 저장소에서 검증합니다.
+
+```bash
+brew style --cask Casks/kakao-quick-login.rb
+brew audit --cask --online kakao-quick-login
+brew install --cask kakao-quick-login
+```
+
+`brew style`은 탭 안에 있는 캐스크만 검사합니다. 저장소 밖 파일을 지정하면
+`Homebrew requires casks to be in a tap`으로 거절됩니다.
+
+### 4. 검색 노출
+
+릴리스와 저장소 메타데이터가 검색·자동화 도구의 유일한 입력입니다.
+
+- 저장소 About에 한 줄 설명과 `goldenlabs.dev` 링크
+- 토픽: `macos`, `swift`, `swiftui`, `kakaotalk`, `automation`, `accessibility`, `homebrew-cask`
+- 릴리스 태그는 `v<semver>` 고정, 본문에 설치 명령과 SHA-256 명시
+
+## 번들 ID 변경 이력
+
+`0.1.0` 공개 배포부터 번들 ID를 `io.github.thissak.KakaoQuickLogin`에서
+`dev.goldenlabs.KakaoQuickLogin`으로 바꿨습니다. 키체인 service 이름도 같은 값을 씁니다
+(`macos/Sources/KakaoQuickLoginMac/KeychainStore.swift`).
+
+옛 번들 ID로 빌드한 앱을 쓰던 Mac에서는 **저장된 비밀번호를 한 번 다시 입력**해야 합니다.
+옛 키체인 항목은 자동으로 지워지지 않으므로 키체인 접근에서
+`io.github.thissak.KakaoQuickLogin` 항목을 직접 삭제합니다.
+
+공개 배포 이후에는 번들 ID를 다시 바꾸지 않습니다. 사용자의 손쉬운 사용 권한 승인과
+키체인 항목이 모두 초기화됩니다.
+
 ## 공통 배포 고지
 
 릴리스 페이지에는 다음 내용을 명시합니다.

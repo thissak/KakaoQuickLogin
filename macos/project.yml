@@ -19,13 +19,15 @@ targets:
     platform: macOS
     sources:
       - path: Sources/KakaoQuickLoginMac
+      - path: Resources/Assets.xcassets
     settings:
       base:
         PRODUCT_NAME: KakaoQuickLogin
-        PRODUCT_BUNDLE_IDENTIFIER: io.github.thissak.KakaoQuickLogin
+        PRODUCT_BUNDLE_IDENTIFIER: dev.goldenlabs.KakaoQuickLogin
         PRODUCT_MODULE_NAME: KakaoQuickLoginMac
         CODE_SIGN_ENTITLEMENTS: Resources/KakaoQuickLoginMac.entitlements
         INFOPLIST_FILE: Resources/Info.plist
         COMBINE_HIDPI_IMAGES: YES
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
     scheme:
       gatherCoverageData: false

@@ -10,6 +10,8 @@
   <string>$(EXECUTABLE_NAME)</string>
   <key>CFBundleIdentifier</key>
   <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+  <key>CFBundleIconName</key>
+  <string>AppIcon</string>
   <key>CFBundleInfoDictionaryVersion</key>
   <string>6.0</string>
   <key>CFBundleName</key>
@@ -27,7 +29,7 @@
   <key>NSHighResolutionCapable</key>
   <true/>
   <key>NSHumanReadableCopyright</key>
-  <string>Copyright © 2026 KakaoQuickLogin contributors</string>
+  <string>Copyright © 2026 골든랩 (GoldenLabs). goldenlabs.dev</string>
   <key>NSPrincipalClass</key>
   <string>NSApplication</string>
 </dict>
