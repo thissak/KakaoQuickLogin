@@ -14,12 +14,13 @@ final class AppModel: ObservableObject {
     private let keychain = KeychainStore()
     private let automation = KakaoTalkAutomation()
     private var didStart = false
+    private var activeTask: Task<Void, Never>?
 
     func start() {
         guard !didStart else { return }
         didStart = true
 
-        Task {
+        activeTask = Task {
             do {
                 let passwordExists = try await keychain.hasPassword()
                 if passwordExists {
@@ -40,7 +41,12 @@ final class AppModel: ObservableObject {
 
     func login() {
         guard !isBusy else { return }
-        Task { await performLogin() }
+        activeTask = Task { await performLogin() }
+    }
+
+    /// 진행 중인 로그인·저장 작업을 사용자가 esc나 취소 버튼으로 멈춘다.
+    func cancelCurrentOperation() {
+        activeTask?.cancel()
     }
 
     func requestPasswordReset() {
@@ -52,7 +58,7 @@ final class AppModel: ObservableObject {
         guard !password.isEmpty, !isBusy else { return }
         passwordPrompt = nil
 
-        Task {
+        activeTask = Task {
             isBusy = true
             status = AppStatus(
                 tone: .working,
@@ -166,6 +172,15 @@ final class AppModel: ObservableObject {
     }
 
     private func show(_ error: Error) {
+        if error is CancellationError {
+            status = AppStatus(
+                tone: .ready,
+                title: "취소됨",
+                message: "요청을 취소했습니다. 언제든 다시 시도할 수 있습니다."
+            )
+            return
+        }
+
         let message = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
         status = AppStatus(
             tone: .error,

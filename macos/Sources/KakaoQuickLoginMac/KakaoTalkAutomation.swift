@@ -13,6 +13,8 @@ final class KakaoTalkAutomation {
     ]
 
     func login(password: String) async throws -> LoginOutcome {
+        try Task.checkCancellation()
+
         guard accessibility.requestTrustIfNeeded() else {
             throw AccessibilityError.permissionRequired
         }
@@ -29,7 +31,7 @@ final class KakaoTalkAutomation {
         let applicationElement = AXUIElementCreateApplication(runningApplication.processIdentifier)
         AXUIElementSetMessagingTimeout(applicationElement, 4)
 
-        guard let passwordField = await waitForPasswordField(in: applicationElement) else {
+        guard let passwordField = try await waitForPasswordField(in: applicationElement) else {
             return outcomeWithoutPasswordField(in: applicationElement)
         }
 
@@ -56,7 +58,7 @@ final class KakaoTalkAutomation {
         }
 
         // 로그인 버튼은 비밀번호가 채워진 뒤에야 활성화되므로 입력 후에 찾는다.
-        guard let loginButton = await waitForLoginButton(in: applicationElement) else {
+        guard let loginButton = try await waitForLoginButton(in: applicationElement) else {
             throw KakaoTalkError.loginButtonNotFound
         }
 
@@ -73,13 +75,14 @@ final class KakaoTalkAutomation {
 
     /// 카카오톡이 방금 실행되었거나 창을 다시 여는 중일 수 있어 넉넉히 기다린다.
     /// Windows판(`KakaoTalkAutomation.cs`)이 프로세스와 창 등장에 각각 20초를 쓰는 것과 맞춘다.
-    private func waitForPasswordField(in application: AXUIElement) async -> AXUIElement? {
+    private func waitForPasswordField(in application: AXUIElement) async throws -> AXUIElement? {
         for attempt in 0..<50 {
+            try Task.checkCancellation()
             if let field = accessibility.securePasswordField(in: application) {
                 return field
             }
             if attempt < 49 {
-                try? await Task.sleep(nanoseconds: 400_000_000)
+                try await Task.sleep(nanoseconds: 400_000_000)
             }
         }
         return nil
@@ -116,13 +119,14 @@ final class KakaoTalkAutomation {
         }
     }
 
-    private func waitForLoginButton(in application: AXUIElement) async -> AXUIElement? {
+    private func waitForLoginButton(in application: AXUIElement) async throws -> AXUIElement? {
         for attempt in 0..<4 {
+            try Task.checkCancellation()
             if let button = accessibility.loginButton(in: application) {
                 return button
             }
             if attempt < 3 {
-                try? await Task.sleep(nanoseconds: 200_000_000)
+                try await Task.sleep(nanoseconds: 200_000_000)
             }
         }
         return nil

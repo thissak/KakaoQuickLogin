@@ -23,23 +23,36 @@ struct ContentView: View {
 
             StatusCard(status: model.status, isBusy: model.isBusy)
 
-            Button(action: model.login) {
-                HStack(spacing: 8) {
-                    if model.isBusy {
-                        ProgressView()
-                            .controlSize(.small)
-                    } else {
-                        Image(systemName: "lock.open.fill")
+            HStack(spacing: 10) {
+                Button(action: model.login) {
+                    HStack(spacing: 8) {
+                        if model.isBusy {
+                            ProgressView()
+                                .controlSize(.small)
+                        } else {
+                            Image(systemName: "lock.open.fill")
+                        }
+                        Text(model.isBusy ? "확인 중…" : "카카오톡 로그인")
                     }
-                    Text(model.isBusy ? "확인 중…" : "카카오톡 로그인")
+                    .frame(maxWidth: .infinity)
                 }
-                .frame(maxWidth: .infinity)
+                .buttonStyle(.borderedProminent)
+                .controlSize(.large)
+                .keyboardShortcut(.defaultAction)
+                .disabled(model.isBusy)
+                .accessibilityHint("카카오톡 로그인 화면을 확인한 뒤 저장된 비밀번호로 로그인합니다.")
+
+                if model.isBusy {
+                    Button(action: model.cancelCurrentOperation) {
+                        Image(systemName: "xmark")
+                    }
+                    .buttonStyle(.bordered)
+                    .controlSize(.large)
+                    .keyboardShortcut(.cancelAction)
+                    .help("취소 (esc)")
+                    .accessibilityLabel("취소")
+                }
             }
-            .buttonStyle(.borderedProminent)
-            .controlSize(.large)
-            .keyboardShortcut(.defaultAction)
-            .disabled(model.isBusy)
-            .accessibilityHint("카카오톡 로그인 화면을 확인한 뒤 저장된 비밀번호로 로그인합니다.")
 
             HStack(spacing: 12) {
                 Button("비밀번호 변경", action: model.requestPasswordReset)
@@ -64,7 +77,6 @@ struct ContentView: View {
             PasswordEntrySheet(mode: mode) { password in
                 model.savePassword(password, mode: mode)
             }
-            .interactiveDismissDisabled(mode == .initial)
         }
     }
 }

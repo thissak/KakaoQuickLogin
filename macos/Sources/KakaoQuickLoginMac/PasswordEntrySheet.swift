@@ -10,11 +10,25 @@ struct PasswordEntrySheet: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
-            VStack(alignment: .leading, spacing: 6) {
-                Text(mode.title)
-                    .font(.title2.weight(.semibold))
-                Text("비밀번호는 macOS 키체인에 암호화되어 저장됩니다.")
-                    .foregroundStyle(.secondary)
+            HStack(alignment: .top, spacing: 12) {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(mode.title)
+                        .font(.title2.weight(.semibold))
+                    Text("비밀번호는 macOS 키체인에 암호화되어 저장됩니다.")
+                        .foregroundStyle(.secondary)
+                }
+
+                Spacer(minLength: 0)
+
+                Button(action: { dismiss() }) {
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.title3)
+                        .foregroundStyle(.secondary)
+                }
+                .buttonStyle(.plain)
+                .keyboardShortcut(.cancelAction)
+                .help("취소 (esc)")
+                .accessibilityLabel("취소")
             }
 
             Form {
@@ -27,10 +41,6 @@ struct PasswordEntrySheet: View {
             .frame(height: 90)
 
             HStack {
-                if mode == .reset {
-                    Button("취소", role: .cancel) { dismiss() }
-                }
-
                 Spacer()
 
                 Button("키체인에 저장", action: save)
