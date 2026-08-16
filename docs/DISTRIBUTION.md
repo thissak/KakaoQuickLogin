@@ -97,11 +97,20 @@ gh repo create thissak/homebrew-tap --public \
 
 ### 3. 릴리스마다 갱신
 
+**한 번 공개한 버전 번호는 다시 쓰지 않습니다.** 캐스크가 `sha256`을 고정하므로, 같은
+번호로 다시 서명·공증하면 ZIP 해시가 달라져 이미 배포된 값과 어긋납니다. 수정본은 반드시
+`Info.plist`의 `CFBundleShortVersionString`을 올려서 냅니다. 배포 ZIP 이름과 SHA-256
+파일은 스크립트가 이 값을 읽어 만듭니다.
+
 공증 스크립트가 만든 ZIP의 SHA-256으로 `version`과 `sha256`을 갱신합니다.
 
 ```bash
 shasum -a 256 artifacts/macos/KakaoQuickLogin-<version>-macos-universal.zip
 ```
+
+릴리스에 올리는 `.sha256` 파일에는 **파일 이름만** 들어가야 합니다. `shasum`은 인자로 준
+경로를 그대로 출력하므로 절대 경로로 부르면 빌드한 Mac의 사용자 계정명이 공개 자산에
+남습니다.
 
 탭 저장소에서 검증합니다.
 

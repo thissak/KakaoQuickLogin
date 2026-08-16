@@ -141,8 +141,10 @@ XcodeGen에서 이 두 키는 "해당 경로에 파일을 **생성**하라"는 �
   실행되지만 새 서명은 불가하다. 그 전에 Xcode에서 재발급한다.
 - **앱을 한 번도 실행하지 않았다.** 실행 시 손쉬운 사용 권한 요청과 실제 카카오톡 로그인
   시도가 발생하므로 의도적으로 보류했다. 위 "다음 작업" 1번이 남은 검증 전부다.
-- `archive-and-notarize.sh`의 릴리스 ZIP 이름에 버전 `0.1.0`이 하드코딩되어 있다.
-  `Info.plist`의 `CFBundleShortVersionString`과 수동으로 맞춰야 한다.
+  → 2026-08-14 실제 Mac에서 로그인 동작까지 확인했다. `PROGRESS.md` 참고.
+- ~~`archive-and-notarize.sh`의 릴리스 ZIP 이름에 버전 `0.1.0`이 하드코딩되어 있다.~~
+  → 2026-08-16 해결. 스크립트가 `Info.plist`의 `CFBundleShortVersionString`을 읽어
+  이름을 만든다.
 - `artifacts/macos/`에 중간 산출물이 남아 있다 — `KakaoQuickLogin-notarization.zip`(공증
   업로드용)과 `KakaoQuickLogin-0.1.0-macos-universal-dev.zip`(개발 서명 빌드, 공증 전).
   **배포용은 접미사 없는 `KakaoQuickLogin-0.1.0-macos-universal.zip` 하나뿐이다.**

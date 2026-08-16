@@ -19,6 +19,14 @@
 - [build] `archive-and-notarize.sh`가 배포 ZIP 이름의 버전을 `Info.plist`에서 읽습니다.
   하드코딩된 `0.1.0`을 그대로 두면 버전을 올린 뒤에도 옛 이름으로 덮어써
   이미 배포된 파일과 충돌합니다.
+- [build] 릴리스에 함께 올리는 `.sha256` 파일에 빌드한 Mac의 절대 경로가 남지 않게 했습니다.
+  `shasum`은 인자로 준 경로를 그대로 출력하므로 절대 경로로 호출하면 사용자 계정명이
+  공개 자산에 노출됩니다. 이미 올라간 v0.1.1 자산도 파일 이름만 담은 것으로 교체했습니다.
+- [chore] `v0.1.1`을 공개 배포했습니다. GitHub 릴리스에 ZIP·SHA-256을 올리고
+  `thissak/homebrew-tap`의 캐스크를 갱신했습니다. `brew style`·`brew audit --online`
+  무결점, `brew upgrade --cask`로 0.1.0 → 0.1.1 실제 업그레이드와 설치본의 `spctl`·
+  `stapler validate`까지 확인했습니다. 번들 ID가 같아 키체인 항목과 손쉬운 사용 권한은
+  유지됩니다.
 
 ### 2026-08-15
 

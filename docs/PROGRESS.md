@@ -1,6 +1,6 @@
 ---
 lifecycle: active
-last_updated: 2026-08-13
+last_updated: 2026-08-16
 ---
 
 # 진행 현황
@@ -17,6 +17,8 @@ Windows와 macOS에서 카카오톡 비밀번호를 운영체제 보안 저장�
 - 확인된 카카오톡 프로세스와 포커스된 보안 입력란에만 자동 입력하는 실패 차단 로직
 - Windows 빌드·자체 테스트와 macOS XcodeGen·빌드·Developer ID 공증 스크립트
 - Windows와 macOS를 검사하는 GitHub Actions 워크플로
+- macOS 모든 단계에서 esc·X 버튼으로 취소 (비밀번호 시트, 진행 중인 로그인·저장 작업)
+- macOS 공개 배포 경로: GitHub 릴리스 + 개인 Homebrew 탭 (`thissak/tap`), 현재 `v0.1.1`
 
 ## 현재 검증 상태
 
@@ -27,14 +29,17 @@ Windows와 macOS에서 카카오톡 비밀번호를 운영체제 보안 저장�
   전환까지 약 1초에 완료. 검증 방법과 로그는
   [handoff](handoff/2026-08-13-macos-signing-notarization.md) 참고.
 - macOS Developer ID 서명과 Apple 공증: 통과 (`spctl` → `Notarized Developer ID`)
+- macOS 취소 동작(비밀번호 시트 esc·X): **실제 Mac에서 통과**(2026-08-16)
+- Homebrew 배포 경로: 통과(2026-08-16). `brew style` 무결점, `brew audit --cask --online`
+  exit 0, `brew upgrade --cask`로 0.1.0 → 0.1.1 업그레이드 후 설치본의 `spctl`
+  (`Notarized Developer ID`)과 `stapler validate` 확인.
 
 ## 다음 작업
 
 1. 비밀번호 변경·삭제와 특수문자·한글 비밀번호를 실제 Mac에서 시험합니다.
 2. 카카오톡이 이미 로그인된 상태에서 `이미 로그인됨` 판정이 맞는지 확인합니다
    (현재 판정 규칙은 "제목이 `로그인`인 창이 없으면 로그인된 것으로 간주"이며 미검증).
-3. 번들 ID를 바꿨으므로 새 번들 ID로 서명·공증본을 다시 만들고, 손쉬운 사용 권한을
-   다시 승인한 뒤 로그인 동작을 재확인합니다.
-4. GitHub 릴리스 `v0.1.1`을 발행하고 `thissak/homebrew-tap`의 캐스크를 `0.1.1`·
-   `91a9ff98…`로 갱신합니다. (`v0.1.0`과 탭 저장소는 2026-08-15에 공개 완료)
-5. 공개 배포 시 `docs/DISTRIBUTION.md` 점검표를 수행합니다.
+3. 새 번들 ID(`dev.goldenlabs.KakaoQuickLogin`) 설치본에서 손쉬운 사용 권한 승인과
+   로그인 동작을 재확인합니다. 서명·공증본 재작성과 설치는 `v0.1.1`로 완료했고, 남은
+   것은 로그인 자동 입력의 실제 재확인입니다.
+4. 공개 배포 시 `docs/DISTRIBUTION.md` 점검표를 수행합니다.
