@@ -50,5 +50,8 @@ xcrun stapler validate "${APP_PATH}"
 spctl --assess --type execute --verbose=2 "${APP_PATH}"
 
 ditto -c -k --keepParent "${APP_PATH}" "${RELEASE_ZIP}"
-shasum -a 256 "${RELEASE_ZIP}" > "${RELEASE_ZIP}.sha256"
+# 릴리스에 함께 올리는 파일이므로 빌드한 Mac의 절대 경로(사용자 계정명 포함)가 남지
+# 않도록 파일 이름만 적는다. shasum은 인자로 준 경로를 그대로 출력한다.
+RELEASE_ZIP_NAME="$(basename "${RELEASE_ZIP}")"
+(cd "${OUTPUT_DIR}" && shasum -a 256 "${RELEASE_ZIP_NAME}" > "${RELEASE_ZIP_NAME}.sha256")
 echo "배포 파일: ${RELEASE_ZIP}"
