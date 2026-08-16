@@ -1,6 +1,6 @@
 cask "kakao-quick-login" do
-  version "0.1.0"
-  sha256 "01a9cc091eaed2f0c6369aa130b02538580a519c5fe1a46a94d2f571b8a0fb01"
+  version "0.1.1"
+  sha256 "91a9ff988f535a9e50bda994231156cb0bedd8533a6d11684abd35c334c68d50"
 
   url "https://github.com/thissak/KakaoQuickLogin/releases/download/v#{version}/KakaoQuickLogin-#{version}-macos-universal.zip",
       verified: "github.com/thissak/KakaoQuickLogin/"

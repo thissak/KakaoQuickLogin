@@ -19,7 +19,11 @@ OUTPUT_DIR="${REPOSITORY_ROOT}/artifacts/macos"
 ARCHIVE_PATH="${OUTPUT_DIR}/KakaoQuickLoginMac.xcarchive"
 APP_PATH="${ARCHIVE_PATH}/Products/Applications/KakaoQuickLogin.app"
 UPLOAD_ZIP="${OUTPUT_DIR}/KakaoQuickLogin-notarization.zip"
-RELEASE_ZIP="${OUTPUT_DIR}/KakaoQuickLogin-0.1.0-macos-universal.zip"
+# 배포 파일 이름은 Info.plist의 버전을 따라간다. 하드코딩하면 버전을 올린 뒤 옛 이름으로
+# 덮어써서 이미 공개된 zip과 Cask의 sha256이 어긋난다.
+VERSION="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' \
+  "${MACOS_DIR}/Resources/Info.plist")"
+RELEASE_ZIP="${OUTPUT_DIR}/KakaoQuickLogin-${VERSION}-macos-universal.zip"
 
 "${SCRIPT_DIR}/generate-project.sh"
 mkdir -p "${OUTPUT_DIR}"
